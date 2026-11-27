@@ -12,6 +12,7 @@ Run `python3 -m http.server 8000` from this directory and visit `http://localhos
 - Selected professional projects: SIRUKIM, KoltiTrace MIS, and JAKHABITAT
 - Professional experience, technical expertise, and development approach
 - Email, GitHub, LinkedIn, and an email-based CV request
+- Light and dark themes with a header toggle, system preference detection, and saved visitor preferences
 
 Project descriptions distinguish individual contributions within team projects. No private company source code, invented metrics, sample articles, or placeholder project links are published.
 
@@ -19,7 +20,7 @@ Project descriptions distinguish individual contributions within team projects. 
 
 Keep Indonesian and English copy in the `i18n` object synchronized. Each `data-i18n` key must exist in both languages. Also update the Indonesian HTML fallback so content remains readable without JavaScript. Language preference storage is optional; the page still works when browser storage is unavailable.
 
-Use existing CSS variables to maintain the dark purple and teal theme. Keep visible keyboard focus, reduced-motion support, and mobile navigation when changing styles.
+Use the CSS variables in `:root` and `:root[data-theme="light"]` to maintain both purple and teal themes. Keep visible keyboard focus, text contrast, reduced-motion support, and mobile navigation when changing styles. Theme selection is applied before the first paint; storage is optional, and manual choices override later system theme changes.
 
 ## Publication
 

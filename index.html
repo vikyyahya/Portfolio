@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0a0f">
+<script>
+// Apply the saved or system theme before the first paint.
+const systemThemeQuery = typeof window.matchMedia === 'function'
+  ? window.matchMedia('(prefers-color-scheme: light)') : null;
+let savedTheme = null;
+try { savedTheme = localStorage.getItem('theme'); } catch { /* Storage is optional. */ }
+let hasThemePreference = savedTheme === 'light' || savedTheme === 'dark';
+document.documentElement.dataset.theme = hasThemePreference
+  ? savedTheme : (systemThemeQuery?.matches ? 'light' : 'dark');
+document.querySelector('meta[name="theme-color"]').content =
+  document.documentElement.dataset.theme === 'light' ? '#ffffff' : '#0a0a0f';
+</script>
 <title>Viky Yahya — Mobile & Fullstack Developer</title>
 <meta name="description" content="Viky Yahya — Mobile & Fullstack Developer. Mobile and fullstack engineering focused on offline-first apps, data synchronization, and performance.">
 <meta property="og:title" content="Viky Yahya — Mobile & Fullstack Developer">
@@ -14,27 +28,43 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
+    color-scheme: dark;
     --bg: #0a0a0f; --bg2: #0f0f18; --bg3: #14141f;
     --surface: #1a1a2e; --surface2: #1f1f35;
     --border: rgba(120,120,200,0.12); --border2: rgba(120,120,200,0.22);
     --text: #e8e8f0; --text2: #b5b5ce; --text3: #a3a3be;
     --accent: #6453d8; --accent2: #a78bfa; --accent3: #c4b5fd;
     --teal: #2dd4bf; --teal2: #5eead4; --green: #4ade80; --amber: #fbbf24;
+    --nav-bg: rgba(10,10,15,0.92); --accent-hover: #7461df;
+    --accent-border: rgba(167,139,250,0.4); --teal-border: rgba(45,212,191,0.35);
+    --green-border: rgba(74,222,128,0.3);
     --font-head: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; --font-mono: 'DM Mono', monospace;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #ffffff; --bg2: #f6f6fc; --bg3: #f0f2f9;
+    --surface: #ffffff; --surface2: #eeedf7;
+    --border: rgba(65,67,106,0.16); --border2: rgba(65,67,106,0.26);
+    --text: #19192d; --text2: #4e526c; --text3: #62677f;
+    --accent2: #5944bc; --accent3: #4c368f;
+    --teal: #0f766e; --teal2: #0f766e; --green: #166534; --amber: #854d0e;
+    --nav-bg: rgba(255,255,255,0.94); --accent-hover: #5341bf;
+    --accent-border: rgba(89,68,188,0.35); --teal-border: rgba(15,118,110,0.35);
+    --green-border: rgba(22,101,52,0.3);
   }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
   body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
 
   /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: rgba(10,10,15,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); gap: 1rem; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2rem; background: var(--nav-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); gap: 1rem; }
   .nav-logo { font-family: var(--font-head); font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
   .nav-logo span { color: var(--accent2); }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text2); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s; }
   .nav-links a:hover { color: var(--accent3); }
   .nav-right { display: flex; align-items: center; gap: 0.75rem; }
-  .nav-cta { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent2); text-decoration: none; border: 1px solid rgba(167,139,250,0.3); padding: 0.45rem 1rem; border-radius: 4px; transition: all 0.2s; letter-spacing: 0.04em; white-space: nowrap; }
+  .nav-cta { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent2); text-decoration: none; border: 1px solid var(--accent-border); padding: 0.45rem 1rem; border-radius: 4px; transition: all 0.2s; letter-spacing: 0.04em; white-space: nowrap; }
   .nav-cta:hover { background: rgba(124,111,247,0.15); border-color: var(--accent2); color: var(--accent3); }
 
   /* LANGUAGE SWITCHER */
@@ -43,6 +73,15 @@
   .lang-btn:hover { color: var(--text2); }
   .lang-btn.active { background: rgba(124,111,247,0.18); color: var(--accent3); }
   .lang-divider { width: 1px; height: 16px; background: var(--border2); }
+
+  /* Theme action shows the theme you can switch to. */
+  .theme-toggle { width: 38px; height: 38px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border2); border-radius: 8px; background: var(--bg3); color: var(--text2); cursor: pointer; }
+  .theme-toggle[hidden] { display: none; }
+  .theme-toggle:hover { color: var(--accent3); border-color: var(--accent2); }
+  .theme-toggle svg { width: 18px; height: 18px; pointer-events: none; }
+  .theme-icon-moon { display: none; }
+  [data-theme="light"] .theme-icon-sun { display: none; }
+  [data-theme="light"] .theme-icon-moon { display: block; }
 
   /* HERO */
   .hero { min-height: 100vh; display: flex; align-items: center; padding: 7rem 2rem 4rem; position: relative; overflow: hidden; }
@@ -57,7 +96,7 @@
   .hero-sub { font-size: 1.05rem; color: var(--text2); max-width: 480px; margin-bottom: 2.5rem; line-height: 1.8; }
   .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
   .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: #fff; text-decoration: none; padding: 0.8rem 1.8rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.02em; transition: all 0.2s; }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
   .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--text2); text-decoration: none; padding: 0.8rem 1.8rem; border-radius: 6px; border: 1px solid var(--border2); font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.02em; transition: all 0.2s; }
   .btn-secondary:hover { color: var(--text); border-color: rgba(120,120,200,0.45); background: rgba(120,120,200,0.06); }
 
@@ -74,9 +113,9 @@
   .stat-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
   .stack-pills { display: flex; flex-wrap: wrap; gap: 0.45rem; }
   .pill { font-family: var(--font-mono); font-size: 0.68rem; padding: 0.25rem 0.65rem; border-radius: 100px; border: 1px solid var(--border2); color: var(--text2); background: var(--bg3); }
-  .pill.accent { border-color: rgba(167,139,250,0.4); color: var(--accent3); background: rgba(124,111,247,0.08); }
-  .pill.teal { border-color: rgba(45,212,191,0.35); color: var(--teal2); background: rgba(45,212,191,0.07); }
-  .pill.green { border-color: rgba(74,222,128,0.3); color: var(--green); background: rgba(74,222,128,0.06); }
+  .pill.accent { border-color: var(--accent-border); color: var(--accent3); background: rgba(124,111,247,0.08); }
+  .pill.teal { border-color: var(--teal-border); color: var(--teal2); background: rgba(45,212,191,0.07); }
+  .pill.green { border-color: var(--green-border); color: var(--green); background: rgba(74,222,128,0.06); }
 
   /* SECTIONS */
   section { padding: 6rem 2rem; position: relative; }
@@ -192,6 +231,12 @@
   .fade-up { opacity: 1; transform: none; }
   .nav-links { gap: 1.3rem; }
   .nav-links a[aria-current="location"] { color: var(--teal2); }
+  @media (max-width: 1000px) {
+    nav { flex-wrap: wrap; }
+    .nav-links { order: 3; width: 100%; justify-content: center; gap: 1.25rem; }
+    section[id] { scroll-margin-top: 135px; }
+    .hero { padding-top: 10rem; }
+  }
   @media (max-width: 900px) { .hero-inner { gap: 2rem; grid-template-columns: 1fr 320px; } .projects-grid { grid-template-columns: 1fr; } }
   @media (max-width: 768px) {
     nav { flex-wrap: wrap; gap: .6rem; }
@@ -211,6 +256,12 @@
     .contact-link { overflow-wrap: anywhere; max-width: 100%; font-family: var(--font-body); }
     .contact-wrapper { padding: 2rem 1rem; }
   }
+  @media (max-width: 420px) {
+    .nav-right { gap: .4rem; }
+    .theme-toggle { width: 34px; height: 34px; }
+    .lang-btn { font-size: .65rem; padding: .35rem .45rem; }
+    .nav-cta { font-size: .65rem; padding: .45rem .5rem; }
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -226,12 +277,16 @@
   <a href="#home" aria-label="Viky Yahya home" class="nav-logo">vy<span>.</span></a>
   <ul class="nav-links"><li><a href="#projects" data-i18n="nav_projects">Proyek</a></li><li><a href="#experience" data-i18n="nav_experience">Pengalaman</a></li><li><a href="#skills" data-i18n="nav_skills">Keahlian</a></li><li><a href="#approach" data-i18n="nav_approach">Pendekatan</a></li><li><a href="#contact" data-i18n="nav_contact">Kontak</a></li></ul>
   <div class="nav-right">
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Aktifkan tema terang" title="Aktifkan tema terang" hidden>
+      <svg class="theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+      <svg class="theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>
+    </button>
     <div class="lang-switcher" role="group" aria-label="Language switcher">
       <button type="button" aria-label="Bahasa Indonesia" aria-pressed="true" class="lang-btn active" data-lang="id" onclick="setLang('id')">🇮🇩 ID</button>
       <div class="lang-divider"></div>
       <button type="button" aria-label="English" aria-pressed="false" class="lang-btn" data-lang="en" onclick="setLang('en')">🇬🇧 EN</button>
     </div>
-    <a href="mailto:hello@vikyyahya.my.id" class="nav-cta" data-i18n="nav_hire">Hubungi saya →</a>
+    <a href="mailto:vikyyahya.id@gmail.com" class="nav-cta" data-i18n="nav_hire">Hubungi saya →</a>
   </div>
 </nav>
 
@@ -252,7 +307,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
           GitHub
         </a>
-        <a href="mailto:hello@vikyyahya.my.id?subject=CV%20Request" class="btn-secondary" data-i18n="request_cv">Minta CV →</a>
+        <a href="mailto:vikyyahya.id@gmail.com?subject=CV%20Request" class="btn-secondary" data-i18n="request_cv">Minta CV →</a>
       </div>
     </div>
     <div class="hero-card">
@@ -324,9 +379,9 @@
       <h2 data-i18n="contact_title">Mari Diskusikan Proyek Anda</h2>
       <p data-i18n="contact_desc">Butuh pengembangan aplikasi mobile, antarmuka web, atau perbaikan sistem? Kirim konteks kebutuhan dan lingkup pekerjaan melalui email. Untuk profil profesional, kunjungi LinkedIn saya.</p>
       <div class="contact-links">
-        <a href="mailto:hello@vikyyahya.my.id" class="contact-link">
+        <a href="mailto:vikyyahya.id@gmail.com" class="contact-link">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          hello@vikyyahya.my.id
+          vikyyahya.id@gmail.com
         </a>
         <a href="https://github.com/vikyyahya" target="_blank" rel="noopener" class="contact-link">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
@@ -509,7 +564,36 @@ function setLang(lang) {
     button.classList.toggle('active', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
+  updateThemeButton();
 }
+function updateThemeButton() {
+  const button = document.getElementById('theme-toggle');
+  const light = document.documentElement.dataset.theme === 'light';
+  const english = document.documentElement.lang === 'en';
+  const label = english
+    ? (light ? 'Switch to dark theme' : 'Switch to light theme')
+    : (light ? 'Aktifkan tema gelap' : 'Aktifkan tema terang');
+  button.setAttribute('aria-label', label);
+  button.title = label;
+}
+function setTheme(theme, persist = true) {
+  if (theme !== 'light' && theme !== 'dark') return;
+  document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#ffffff' : '#0a0a0f';
+  if (persist) {
+    hasThemePreference = true;
+    try { localStorage.setItem('theme', theme); } catch { /* Keep the choice for this visit. */ }
+  }
+  updateThemeButton();
+}
+const themeToggle = document.getElementById('theme-toggle');
+themeToggle.hidden = false;
+themeToggle.addEventListener('click', () => {
+  setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+});
+systemThemeQuery?.addEventListener('change', event => {
+  if (!hasThemePreference) setTheme(event.matches ? 'light' : 'dark', false);
+});
 setLang(readLanguage());
 document.getElementById('year').textContent = new Date().getFullYear();
 const sections = document.querySelectorAll('section[id]');
