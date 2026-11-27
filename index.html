@@ -153,8 +153,18 @@
   .hero { min-height: 88vh; }
   .hero-sub { margin-bottom: 1.8rem; }
   .hero-note { margin-top: 1.3rem; font-size: .85rem; color: var(--text2); }
-  .stat-num { font-size: 1.35rem; line-height: 1.25; }
-  .stat-label { font-size: .7rem; }
+  .hero-inner > * { min-width: 0; }
+  .hero-card { min-width: 0; padding: 1.25rem; }
+  .hero-card-header { gap: .65rem; margin-bottom: 1.1rem; }
+  .hero-card-header > div { min-width: 0; }
+  .hero-card .avatar { width: 44px; height: 44px; font-size: 1rem; }
+  .hero-card-name { font-size: .95rem; line-height: 1.4; }
+  .hero-card .hero-card-role { font-size: .65rem; line-height: 1.5; }
+  .hero-card-stat { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-bottom: 1.1rem; }
+  .stat-box { min-width: 0; padding: .75rem; }
+  .stat-num { font-family: var(--font-body); font-size: .9375rem; font-weight: 700; line-height: 1.35; overflow-wrap: anywhere; }
+  .stat-label { font-size: .625rem; line-height: 1.5; letter-spacing: .04em; overflow-wrap: anywhere; margin-top: .35rem; }
+  .hero-card .pill { font-size: .6875rem; padding: .2rem .55rem; }
   .hero-card-role, .pill { font-size: .75rem; }
   .skills-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .projects-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
